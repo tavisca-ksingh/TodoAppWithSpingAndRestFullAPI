@@ -4,7 +4,7 @@ public class ToDoList {
 	
 	private Integer id;
 	private String name;
-	private String details;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -17,21 +17,16 @@ public class ToDoList {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDetails() {
-		return details;
-	}
-	public void setDetails(String details) {
-		this.details = details;
-	}
+	
 	@Override
 	public String toString() {
-		return "ToDoList [id=" + id + ", name=" + name + ", details=" + details + "]";
+		return "ToDoList [id=" + id + ", name=" + name + "]";
 	}
-	public ToDoList(Integer id, String name, String details) {
+	public ToDoList(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.details = details;
+
 	}
 	
 	

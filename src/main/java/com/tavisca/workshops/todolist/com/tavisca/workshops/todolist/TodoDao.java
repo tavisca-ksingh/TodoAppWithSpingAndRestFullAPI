@@ -15,9 +15,9 @@ public class TodoDao {
 	private static List<ToDoList> items=new ArrayList<>();
 	
 	static {
-		items.add(new ToDoList(1,"call","call todo"));
-		items.add(new ToDoList(2,"eat", "eattodo"));
-		items.add(new ToDoList(3,"sleep","sleeptodo"));
+		items.add(new ToDoList(1,"call"));
+		items.add(new ToDoList(2,"eat"));
+		items.add(new ToDoList(3,"sleep"));
 		}
 	
 	public List<ToDoList> ListOfItems() {
@@ -43,6 +43,17 @@ public class TodoDao {
 		
 		return null;
 		
+	}
+	
+	public ToDoList updateAnItem(int itemId, ToDoList data) {
+		for (ToDoList item : items) {
+			if(item.getId()==itemId)
+			{	
+				item.setName(data.getName());
+				items.set(itemId,item);
+			}	
+		}
+		return null;
 	}
 	
 	public ToDoList deleteById(int itemId) {
