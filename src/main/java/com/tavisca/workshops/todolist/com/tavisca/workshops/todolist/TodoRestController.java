@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,9 +27,17 @@ public class TodoRestController {
 	@Autowired
 	private TodoDao todoDao;
 
+	
+	
+
 	@GetMapping(path = "/todo")
 	public List<ToDoList> retrieveListOfTodoItems() {
-		return todoDao.ListOfItems();
+		return todoDao.listOfItems();
+	}
+	
+	@GetMapping(path="todo-list-from-db")
+	public List<ToDoList> retrieveAllItems(){
+		return todoDao.reteriveAllItems();
 	}
 
 	@GetMapping(path = "/todo/{id}")
@@ -38,25 +47,41 @@ public class TodoRestController {
 			throw new UserNotFoundException("id-" + id);
 		return item;
 	}
+	
 
 	@PostMapping("/todo")
-	public ResponseEntity<Object> createNewItem(@RequestBody ToDoList item) {
+	public ResponseEntity<?> createNewItem(@RequestBody ToDoList item) {
+		
+		if(item.getName()==null)
+		{
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); 
+		}
 		ToDoList savedItem = todoDao.save(item);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(savedItem.getId())
-				.toUri();
-		return ResponseEntity.created(location).build();
+//		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedItem.getId())
+//			.toUri();
+//		System.out.println(location);
+		return new ResponseEntity<>(savedItem, HttpStatus.CREATED);
+//		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping("/todo/{id}")
-	public void putItem(@PathVariable int id,
+	public ResponseEntity<?> putItem(@PathVariable int id,
 	                              @Valid @RequestBody ToDoList item) {
-		todoDao.updateAnItem(id, item);
+		//ToDoList savedItem =todoDao.updateAnItem(id, item);
+		// if(savedItem== null) { throw new UserNotFoundException("id - " + id); }
 	
+		        return new ResponseEntity(HttpStatus.OK) ;
+		     
 	}
+	
 
 	@DeleteMapping("/todo/{id}")
-	public void deleteItem(@PathVariable int id) {
+	public  ResponseEntity<?> deleteItem(@PathVariable int id) {
 		ToDoList item = todoDao.deleteById(id);
+		if(item==null) {
+			throw new UserNotFoundException("id - " + id);
+		}
+		return new ResponseEntity<>(item, HttpStatus.OK);
 	}
 
 }

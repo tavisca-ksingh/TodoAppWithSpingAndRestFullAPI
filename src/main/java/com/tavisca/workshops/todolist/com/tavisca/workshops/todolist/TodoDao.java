@@ -3,6 +3,8 @@ package com.tavisca.workshops.todolist.com.tavisca.workshops.todolist;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -11,16 +13,25 @@ public class TodoDao {
 	
 	
 	ToDoList toDoList;
-	private int todoCount=3;
-	private static List<ToDoList> items=new ArrayList<>();
+	private int todoCount=0;
+	private static List<ToDoList> items=new ArrayList<ToDoList>(){
+		{add(new ToDoList(1,"call"));}
+	};
 	
-	static {
-		items.add(new ToDoList(1,"call"));
-		items.add(new ToDoList(2,"eat"));
-		items.add(new ToDoList(3,"sleep"));
-		}
+	@Autowired
+	private TodoItemRepository repository;
 	
-	public List<ToDoList> ListOfItems() {
+	public List<ToDoList> reteriveAllItems(){
+		return repository.findAll();
+	} 
+	
+	
+	public ToDoList showItems() {
+		return new ToDoList(1,"call");
+	}
+	
+	
+	public List<ToDoList> listOfItems() {
 		return items; 
 	}
 	
@@ -28,7 +39,6 @@ public class TodoDao {
 		 if(item.getId()==null)
 		 {
 			 item.setId(++todoCount);
-			 
 		}
 		 items.add(item);
 		 return item;
@@ -37,23 +47,22 @@ public class TodoDao {
 	public ToDoList findAnItem(int itemId) {
 		for (ToDoList item : items) {
 			if(item.getId()==itemId)
-				return item;
-			
-		}
-		
-		return null;
-		
+				return item;	
+		}		
+		return null;		
 	}
 	
-	public ToDoList updateAnItem(int itemId, ToDoList data) {
+	public boolean updateAnItem(int itemId, ToDoList data) {
 		for (ToDoList item : items) {
+		
 			if(item.getId()==itemId)
 			{	
 				item.setName(data.getName());
 				items.set(itemId,item);
+				return true;
 			}	
 		}
-		return null;
+		return false;
 	}
 	
 	public ToDoList deleteById(int itemId) {

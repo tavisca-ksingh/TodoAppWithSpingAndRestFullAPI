@@ -1,9 +1,18 @@
 package com.tavisca.workshops.todolist.com.tavisca.workshops.todolist;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+
+@Entity
 public class ToDoList {
 	
+	@Id
 	private Integer id;
 	private String name;
+	
+	protected ToDoList(){
+	}
 	
 	public Integer getId() {
 		return id;
@@ -26,8 +35,8 @@ public class ToDoList {
 		super();
 		this.id = id;
 		this.name = name;
-
 	}
+	
 	
 	
 	
